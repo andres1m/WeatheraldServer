@@ -3,6 +3,7 @@ package org.example;
 import org.example.struct.forecast.DayForecast;
 import org.example.struct.forecast.Forecast;
 import org.example.struct.forecast.MonthForecast;
+import org.example.struct.wind.Wind;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -10,11 +11,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public abstract class WeatherParser {
+    private Document todayPage;
+    private Document tomorrowPage;
+    private Document monthPage;
+
     protected final String locationName;
-    private Document page;
     protected JSONObject suggestion;
+
     public WeatherParser(String locationName){
         this.locationName = locationName;
     }
@@ -25,6 +32,10 @@ public abstract class WeatherParser {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        todayPage = getTodayPage();
+        tomorrowPage = getTomorrowPage();
+        monthPage = getMonthPage();
 
         return getForecast();
     }
@@ -37,21 +48,25 @@ public abstract class WeatherParser {
         );
     }
 
-    protected abstract DayForecast getTodayForecast();
+    protected abstract List<Double> getTodayHumidity();
+    protected abstract List<Double> getTodayTemperature();
+    protected abstract List<Double> getTodayPrecipitationProbability();
+    protected abstract List<Wind> getTodayWind();
 
-    protected abstract DayForecast getTomorrowForecast();
+    protected abstract List<Double> getTomorrowHumidity();
+    protected abstract List<Double> getTomorrowTemperature();
+    protected abstract List<Double> getTomorrowPrecipitationProbability();
+    protected abstract List<Wind> getTomorrowWind();
 
-    protected abstract MonthForecast getMonthForecast();
+    protected abstract Map<Integer, Double> getMonthMaxTemperature();
+    protected abstract Map<Integer, Double> getMonthMinTemperature();
 
     protected abstract String getSuggestUrl();
+    protected abstract JSONArray formatSuggestion(Document suggestionDocument);
 
-    protected void setSuggestion(){
-        Document suggestionDocument = getSuggestionDocument();
-
-        JSONArray suggestionArray = formatSuggestion(suggestionDocument);
-
-        suggestion = suggestionArray.optJSONObject(0);
-    }
+    protected abstract String getTodayPageUrl();
+    protected abstract String getTomorrowPageUrl();
+    protected abstract String getMonthPageUrl();
 
     protected Connection getConnection(String url){
         return Jsoup.connect(url)
@@ -59,7 +74,82 @@ public abstract class WeatherParser {
                 .referrer("www.google.com");
     }
 
-    protected abstract JSONArray formatSuggestion(Document suggestionDocument);
+    private Document getTodayPage(){
+        if(todayPage == null){
+            try {
+                todayPage = getConnection(getTodayPageUrl())
+                        .get();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return todayPage;
+    }
+
+    private Document getTomorrowPage(){
+        if(tomorrowPage == null){
+            try {
+                tomorrowPage = getConnection(getTomorrowPageUrl())
+                        .get();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return tomorrowPage;
+    }
+
+    private Document getMonthPage(){
+        if(monthPage == null){
+            try {
+                monthPage = getConnection(getMonthPageUrl())
+                        .get();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return monthPage;
+    }
+
+    private DayForecast getTodayForecast(){
+        DayForecast forecast = new DayForecast();
+
+        forecast.setHumidityData(getTodayHumidity());
+        forecast.setTemperatureData(getTodayTemperature());
+        forecast.setPrecipitationProbabilityData(getTodayPrecipitationProbability());
+        forecast.setWindData(getTodayWind());
+
+        return forecast;
+    }
+
+    private DayForecast getTomorrowForecast(){
+        DayForecast forecast = new DayForecast();
+
+        forecast.setHumidityData(getTomorrowHumidity());
+        forecast.setTemperatureData(getTomorrowTemperature());
+        forecast.setPrecipitationProbabilityData(getTomorrowPrecipitationProbability());
+        forecast.setWindData(getTomorrowWind());
+
+        return forecast;
+    }
+
+    private MonthForecast getMonthForecast(){
+        MonthForecast forecast = new MonthForecast();
+        forecast.setMaxTemperatureData(getMonthMaxTemperature());
+        forecast.setMinTemperatureData(getMonthMinTemperature());
+
+        return forecast;
+    }
+
+    private void setSuggestion(){
+        Document suggestionDocument = getSuggestionDocument();
+
+        JSONArray suggestionArray = formatSuggestion(suggestionDocument);
+
+        suggestion = suggestionArray.optJSONObject(0);
+    }
 
     private Document getSuggestionDocument(){
         String url = String.format(getSuggestUrl(), locationName);
