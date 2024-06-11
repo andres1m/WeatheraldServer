@@ -1,4 +1,4 @@
-package org.example.struct.forecast;
+package ru.hse.struct.forecast;
 
 public class Forecast {
     private final DayForecast todayForecast;
@@ -21,5 +21,14 @@ public class Forecast {
 
     public MonthForecast getMonthForecast() {
         return monthForecast;
+    }
+
+    @Override
+    public String toString() {
+        return "Forecast{" +
+                "todayForecast=" + todayForecast +
+                ", tomorrowForecast=" + tomorrowForecast +
+                ", monthForecast=" + monthForecast +
+                '}';
     }
 }

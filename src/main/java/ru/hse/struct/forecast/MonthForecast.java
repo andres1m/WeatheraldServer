@@ -1,4 +1,4 @@
-package org.example.struct.forecast;
+package ru.hse.struct.forecast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,5 +21,13 @@ public class MonthForecast {
 
     public void setMaxTemperatureData(Map<Integer, Double> maxTemperatureData) {
         this.maxTemperatureData = maxTemperatureData;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "minTemperatureData=" + minTemperatureData +
+                ", maxTemperatureData=" + maxTemperatureData +
+                '}';
     }
 }

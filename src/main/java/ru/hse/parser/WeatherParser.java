@@ -1,9 +1,10 @@
-package org.example;
+package ru.hse.parser;
 
-import org.example.struct.forecast.DayForecast;
-import org.example.struct.forecast.Forecast;
-import org.example.struct.forecast.MonthForecast;
-import org.example.struct.wind.Wind;
+import ru.hse.struct.ParseResult;
+import ru.hse.struct.forecast.DayForecast;
+import ru.hse.struct.forecast.Forecast;
+import ru.hse.struct.forecast.MonthForecast;
+import ru.hse.struct.wind.Wind;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -18,6 +19,7 @@ public abstract class WeatherParser {
     private Document todayPage;
     private Document tomorrowPage;
     private Document monthPage;
+    protected String parserName;
 
     protected final String locationName;
     protected JSONObject suggestion;
@@ -26,18 +28,14 @@ public abstract class WeatherParser {
         this.locationName = locationName;
     }
 
-    public Forecast parse(){
+    public ParseResult parse(){
         try {
             setSuggestion();
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        todayPage = getTodayPage();
-        tomorrowPage = getTomorrowPage();
-        monthPage = getMonthPage();
-
-        return getForecast();
+        return new ParseResult(getParserName(), getForecast());
     }
 
     private Forecast getForecast(){
@@ -70,11 +68,11 @@ public abstract class WeatherParser {
 
     protected Connection getConnection(String url){
         return Jsoup.connect(url)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.134 YaBrowser/22.7.0.1842 Yowser/2.5 Safari/537.36")
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36")
                 .referrer("www.google.com");
     }
 
-    private Document getTodayPage(){
+    protected Document getTodayPage(){
         if(todayPage == null){
             try {
                 todayPage = getConnection(getTodayPageUrl())
@@ -87,7 +85,7 @@ public abstract class WeatherParser {
         return todayPage;
     }
 
-    private Document getTomorrowPage(){
+    protected Document getTomorrowPage(){
         if(tomorrowPage == null){
             try {
                 tomorrowPage = getConnection(getTomorrowPageUrl())
@@ -100,7 +98,7 @@ public abstract class WeatherParser {
         return tomorrowPage;
     }
 
-    private Document getMonthPage(){
+    protected Document getMonthPage(){
         if(monthPage == null){
             try {
                 monthPage = getConnection(getMonthPageUrl())
@@ -151,7 +149,7 @@ public abstract class WeatherParser {
         suggestion = suggestionArray.optJSONObject(0);
     }
 
-    private Document getSuggestionDocument(){
+    protected Document getSuggestionDocument(){
         String url = String.format(getSuggestUrl(), locationName);
         Document result = null;
 
@@ -164,5 +162,9 @@ public abstract class WeatherParser {
         }
 
         return result;
+    }
+
+    public String getParserName() {
+        return parserName;
     }
 }
