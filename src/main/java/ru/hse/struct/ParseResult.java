@@ -11,11 +11,8 @@ public class ParseResult {
         this.forecast = forecast;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Forecast getForecast() {
-        return forecast;
+    public ParseResult() {
+        this.name = "404";
+        this.forecast = null;
     }
 }

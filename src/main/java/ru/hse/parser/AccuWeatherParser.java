@@ -72,6 +72,7 @@ public class AccuWeatherParser extends WeatherParser{
         Elements alertDays = getMonthPage().select("a[class=monthly-daypanel has-alert  ]");
 
         Map<Integer, Double> result = new HashMap<>();
+        processMonthDay(today, result, "high high-temp-past ");
         processMonthDay(today, result, "high  ");
         processMonthDay(alertDays, result, "high  ");
         processMonthDay(normalDays, result, "high  ");
@@ -102,7 +103,12 @@ public class AccuWeatherParser extends WeatherParser{
     private void processMonthDay(Elements elements, Map<Integer, Double> map, String selector){
         for(Element element : elements){
             int date = Integer.parseInt(element.select("div[class=date]").text().trim());
-            double temp = Double.parseDouble(element.select(String.format("div[class=%s]", selector)).text().replace("°", ""));
+            String rawTemp = element.select(String.format("div[class=%s]", selector)).text();
+
+            if(rawTemp.equals(""))
+                continue;
+
+            double temp = Double.parseDouble(rawTemp.replace("°", ""));
 
             if(maxDate > date)
                 return;

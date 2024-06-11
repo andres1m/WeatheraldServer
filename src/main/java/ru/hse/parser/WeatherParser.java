@@ -35,6 +35,8 @@ public abstract class WeatherParser {
             e.printStackTrace();
         }
 
+        System.out.println(parserName);
+
         return new ParseResult(getParserName(), getForecast());
     }
 

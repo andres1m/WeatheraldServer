@@ -10,25 +10,4 @@ public class Forecast {
         this.tomorrowForecast = tomorrowForecast;
         this.monthForecast = monthForecast;
     }
-
-    public DayForecast getTodayForecast() {
-        return todayForecast;
-    }
-
-    public DayForecast getTomorrowForecast() {
-        return tomorrowForecast;
-    }
-
-    public MonthForecast getMonthForecast() {
-        return monthForecast;
-    }
-
-    @Override
-    public String toString() {
-        return "Forecast{" +
-                "todayForecast=" + todayForecast +
-                ", tomorrowForecast=" + tomorrowForecast +
-                ", monthForecast=" + monthForecast +
-                '}';
-    }
 }

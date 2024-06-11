@@ -55,22 +55,6 @@ public class DayForecast {
         this.precipitationProbabilityData = precipitationProbabilityData;
     }
 
-    public List<Double> getTemperatureData() {
-        return temperatureData;
-    }
-
-    public List<Double> getHumidityData() {
-        return humidityData;
-    }
-
-    public List<Wind> getWindData() {
-        return windData;
-    }
-
-    public List<Double> getPrecipitationProbabilityData() {
-        return precipitationProbabilityData;
-    }
-
     private <T> void checkList(List<T> input){
         if(input == null){
             return;
@@ -79,15 +63,5 @@ public class DayForecast {
         if(input.size() != 8){
             throw new IllegalArgumentException("Необходим массив с 8 элементами (2, 5, 8, 11, 14, 17, 20, 23 часа)");
         }
-    }
-
-    @Override
-    public String toString() {
-        return "DayForecast{" +
-                "temperatureData=" + temperatureData +
-                ", humidityData=" + humidityData +
-                ", windData=" + windData +
-                ", precipitationProbabilityData=" + precipitationProbabilityData +
-                '}';
     }
 }
