@@ -1,6 +1,5 @@
 package ru.hse.struct.forecast;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class MonthForecast {

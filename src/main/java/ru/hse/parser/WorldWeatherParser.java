@@ -1,6 +1,7 @@
 package ru.hse.parser;
 
 import org.json.JSONArray;
+import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -123,7 +124,18 @@ public class WorldWeatherParser extends WeatherParser{
             result = getConnection(url)
                     .referrer("https://world-weather.ru/pogoda/russia/perm/month/")
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36")
-                    .data("Sec-Ch-Ua-Platform", "\"Windows\"")
+                    .cookie("user_city", "504")
+                    .cookie("__ddg1_", "BGjRmCbeTkqI5e38S12j")
+                    .cookie("__ddg2_", "Rppcyn9C4IGmnkRX")
+                    .cookie("__ddgid_", "5C6jCsFHwQG2QAaA")
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .header("Sec-Fetch-Site", "same-origin")
+                    .header("Sec-Fetch-Mode", "cors")
+                    .header("Sec-Fetch-Dest", "empty")
+                    .header("Sec-Ch-Ua-Platform", "Windows")
+                    .header("Sec-Ch-Ua-Mobile", "?0")
+                    .header("Accept-Encoding", "gzip, deflate, br")
+                    .header("Accept", "application/json, text/javascript, */*; q=0.01")
                     .ignoreContentType(true)
                     .get();
         } catch (IOException e) {
@@ -217,6 +229,16 @@ public class WorldWeatherParser extends WeatherParser{
         }
 
         return result;
+    }
+
+    @Override
+    protected Connection getConnection(String url){
+        return super.getConnection(url)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36")
+                .header("Upgrade-Insecure-Requests", "1")
+                .header("Service-Worker-Navigation-Preload", "true")
+                .header("Sec-Fetch-User", "?1")
+                .header("Cookie", "showBlocks=all%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1%2C1; __ddg1_=BGjRmCbeTkqI5e38S12j; __ddgid_=5C6jCsFHwQG2QAaA; __ddg2_=Rppcyn9C4IGmnkRX; sm-icons=0; user_city=504");
     }
 
     private String matchWindDirection(String input){

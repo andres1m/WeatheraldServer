@@ -1,24 +1,21 @@
 package ru.hse;
 
-import com.google.gson.Gson;
-import ru.hse.parser.*;
+import org.jsoup.Jsoup;
+import ru.hse.parser.GlobalParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
 
 public class Main {
-    private static List<String> list;
-    public static void main(String[] args) {
-        list = new ArrayList<>();
-
-        get("/weatherald/:location", (req,res) ->
-            new GlobalParser(req.params(":location")).parseJson());
-
-        get("/78/:args", (req,res) -> {
-            list.add(req.params(":args"));
-            return new Gson().toJson(list);
+    public static void main(String[] args) throws IOException {
+        get("/weatherald/:location", (req,res) ->{
+            System.out.println("==============");
+            System.out.println(req.ip());
+            System.out.println(req.params(":location"));
+            return new GlobalParser(req.params(":location")).parseJson();
         });
     }
 }

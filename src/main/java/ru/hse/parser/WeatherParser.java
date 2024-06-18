@@ -1,15 +1,15 @@
 package ru.hse.parser;
 
-import ru.hse.struct.ParseResult;
-import ru.hse.struct.forecast.DayForecast;
-import ru.hse.struct.forecast.Forecast;
-import ru.hse.struct.forecast.MonthForecast;
-import ru.hse.struct.wind.Wind;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import ru.hse.struct.ParseResult;
+import ru.hse.struct.forecast.DayForecast;
+import ru.hse.struct.forecast.Forecast;
+import ru.hse.struct.forecast.MonthForecast;
+import ru.hse.struct.wind.Wind;
 
 import java.io.IOException;
 import java.util.List;
@@ -71,6 +71,7 @@ public abstract class WeatherParser {
     protected Connection getConnection(String url){
         return Jsoup.connect(url)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36")
+                .timeout(10000)
                 .referrer("www.google.com");
     }
 

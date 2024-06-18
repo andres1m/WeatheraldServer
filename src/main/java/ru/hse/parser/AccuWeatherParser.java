@@ -1,6 +1,7 @@
 package ru.hse.parser;
 
 import org.json.JSONArray;
+import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -248,5 +249,10 @@ public class AccuWeatherParser extends WeatherParser{
         }
 
         return result;
+    }
+
+    @Override
+    protected Connection getConnection(String url){
+        return super.getConnection(url).referrer("https://www.accuweather.com/");
     }
 }

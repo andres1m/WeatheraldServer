@@ -1,10 +1,10 @@
 package ru.hse.parser;
 
-import ru.hse.struct.wind.Wind;
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.hse.struct.wind.Wind;
 
 import java.util.ArrayList;
 import java.util.HashMap;
